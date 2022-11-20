@@ -11,7 +11,7 @@ Over the past year I have gotten into making things like kombucha, pickled veget
 Built with:
 
 - Flutter
-- SQLlite
+- FlutterFlow
 
 # Collaborators
 

@@ -12,6 +12,8 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyApp> {
+  final List<String> entries = <String>['A', 'B', 'C'];
+
   int _selectedIndex = 1;
   void _onItemTapped(int index) {
     setState(() {
@@ -23,24 +25,27 @@ class _MyHomePageState extends State<MyApp> {
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+            title: const Text('Projects'),
+            backgroundColor: Colors.redAccent,
+            centerTitle: true,
+          ),
         body: Center(
           child: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
-              begin: Alignment.topRight,
-              end: Alignment.bottomLeft,
+              begin: Alignment.bottomLeft,
+              end: Alignment.topRight,
               colors: [
-                Colors.orange,
+                Colors.deepOrange,
                 Colors.pink,
               ],
             )),
-            child: ListView(
-              padding: const EdgeInsets.all(8),
-              children: const <Widget>[
-                Center(child: Text('Entry A')),
-                Center(child: Text('Entry B')),
-                Center(child: Text('Entry C')),
-              ],
+            child: ListView.builder(
+              itemCount: entries.length,
+              itemBuilder: (BuildContext context, int index) {
+                return Center(child: Text('Entry ${entries[index]}'));
+              },
             ),
           ),
         ),

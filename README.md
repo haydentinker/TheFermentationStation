@@ -1,6 +1,6 @@
-# The Fermentation Station Frontend 
+# The Fermentation Station
 
-Frontend for an App that keeps track of your fermentation projects. Backend can be located here: https://github.com/haydentinker/The_Fermentation_Station_Backend
+ App that keeps track of your fermentation projects. 
 
 # Motivation
 

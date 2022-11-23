@@ -81,12 +81,9 @@ class _MyHomePageState extends State<MyApp> {
 
   void _insert(name, end) async {
     // row to insert
-    Map<String, dynamic> row = {
-      Databasehelper.columnName: name,
-      Databasehelper.columnEnd: end
-    };
-    Project car = Project.fromMap(row);
-    await dbHelper.insert(car);
+    Project project = Project();
+    project.setParams(1, "Kombucha", "start", "end");
+    await dbHelper.insert(project);
   }
 
   void _queryAll() async {

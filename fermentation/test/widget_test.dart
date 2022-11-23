@@ -15,12 +15,11 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   test('testing database', () async {
     Project kombucha = Project();
-    kombucha.setParams(1, "kombucha", "01-10-2001", "01-10-2001");
-    // Databasehelper mydb = Databasehelper.instance;
-    // mydb.getDatabase;
-
-    // databaseHelper.insert(kombucha);
-    // var result = databaseHelper.getProject(1);
-    // print(result);
+    kombucha.setParams(5, "kombucha", "start", "end");
+    Databasehelper mydb = Databasehelper.instance;
+    mydb.getDatabase;
+    mydb.insert(kombucha);
+    var dbQuery = await mydb.queryAllRows();
+    expect(dbQuery[1]["name"], "kombucha");
   });
 }

@@ -9,8 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fermentation/main.dart';
-import 'package:fermentation/util/database_helper.dart';
-import 'package:fermentation/models/project_to_use.dart';
+import 'package:fermentation/models/project.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -26,10 +25,12 @@ void main() {
     // Verify that our counter has incremented.
   });
   test('testing database', () async {
-    ProjectToUse kombucha =
-        ProjectToUse(1, "Kombucha", "_projectStart", "_projectEnd");
-    DatabaseHelper db = DatabaseHelper();
-    db.insertProject(kombucha);
-    db.getProject(1);
+    Project kombucha = Project();
+    kombucha.setParams(1, "kombucha", "01-10-2001", "01-10-2001");
+    ProjectProvider projectProvider = ProjectProvider();
+    projectProvider.intialDb();
+    // databaseHelper.insert(kombucha);
+    // var result = databaseHelper.getProject(1);
+    // print(result);
   });
 }

@@ -1,4 +1,6 @@
-import 'package:sqflite/sqflite.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:sqlite3/sqlite3.dart';
+import 'package:path/path.dart';
 
 //Class for Projects
 const String projectTable = "project";
@@ -41,59 +43,49 @@ class Project {
   }
 }
 
-class ProjectProvider {
-  static Database? db;
+class Databasehelper {
+  static const _databaseName = "myDatabase.db";
+  static const _databaseVersion = 1;
 
-  Future<Database?> get _db async {
-    if (db == null) {
-      db = await intialDb();
-      return db;
-    } else {
-      return db;
-    }
+  static const table = 'project_table';
+  static const columnId = 'id';
+  static const columnName = 'name';
+  static const columnStart = 'start';
+  static const columnEnd = 'end';
+  Databasehelper._privateConstructor();
+  static final Databasehelper instance = Databasehelper._privateConstructor();
+  static Database? _database;
+
+  Future<Database?> get getDatabase async {
+    if (_database != null) return _database;
+    _database = await _initDatabase();
+    return _database;
   }
 
-  intialDb() async {
-    Database db = await openDatabase("fermentation\lib\myDatabase.db",
-        onCreate: (Database db, int? version) async {
-      await db.execute('''
-create table $projectTable ( 
-  $projectId integer primary key autoincrement, 
-  $projectName text not null,
-  $projectStart text not null,
-  $projectEnd text not null)
-''');
-    });
-    return db;
+  _initDatabase() async {
+    return await openDatabase('/myDatabase.db',
+        version: _databaseVersion, onCreate: _onCreate);
   }
 
-  Future<Project> insert(
-    Project project,
-  ) async {
-    project._projectId = await db!.insert(projectTable, project.toMap());
-    return project;
+  Future _onCreate(Database db, int version) async {
+    await db.execute('''
+          CREATE TABLE $table(
+            $columnId INTEGER PRIMARY KEY AUTOINCREMENT,
+            $columnName TEXT NOT NULL,
+            $columnStart TEXT NOT NULL,
+            $columnEnd TEXT NOT NULL
+          )
+          ''');
   }
 
-  Future<Project?> getProject(int id) async {
-    List<Map> maps = await db!.query(projectTable,
-        columns: [projectId, projectName, projectStart, projectEnd],
-        where: '$projectId = ?',
-        whereArgs: [id]);
-    if (maps.isNotEmpty) {
-      return Project.fromMap(maps.first);
-    }
-    return null;
-  }
-
-  Future<int> delete(int id) async {
+  Future<int> insert(Project project) async {
+    Database? db = await instance.getDatabase;
     return await db!
-        .delete(projectTable, where: '$projectId = ?', whereArgs: [id]);
+        .insert(table, {'name': project._projectName, 'start': projectStart});
   }
 
-  Future<int> update(Project project) async {
-    return await db!.update(projectTable, project.toMap(),
-        where: '$projectId = ?', whereArgs: [project._projectId]);
+  Future<List<Map<String, dynamic>>> queryAllRows() async {
+    Database? db = await instance.getDatabase;
+    return await db!.query(table);
   }
-
-  Future close() async => db!.close();
 }

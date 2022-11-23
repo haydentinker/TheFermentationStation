@@ -12,23 +12,13 @@ import 'package:fermentation/main.dart';
 import 'package:fermentation/models/project.dart';
 
 void main() {
-  testWidgets('Counter increments smoke test', (WidgetTester tester) async {
-    // Build our app and trigger a frame.
-    await tester.pumpWidget(const MyApp());
-
-    // Verify that our counter starts at 0.
-
-    // Tap the '+' icon and trigger a frame.
-    await tester.tap(find.byIcon(Icons.add));
-    await tester.pump();
-
-    // Verify that our counter has incremented.
-  });
+  WidgetsFlutterBinding.ensureInitialized();
   test('testing database', () async {
     Project kombucha = Project();
     kombucha.setParams(1, "kombucha", "01-10-2001", "01-10-2001");
-    ProjectProvider projectProvider = ProjectProvider();
-    projectProvider.intialDb();
+    // Databasehelper mydb = Databasehelper.instance;
+    // mydb.getDatabase;
+
     // databaseHelper.insert(kombucha);
     // var result = databaseHelper.getProject(1);
     // print(result);

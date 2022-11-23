@@ -41,6 +41,7 @@ dependencies:
   path: ^1.8.2
   path_provider_ios: ^2.0.11
   path_provider_android: ^2.0.21
+  sqlite3: ^1.9.1
 
 dev_dependencies:
   flutter_test:

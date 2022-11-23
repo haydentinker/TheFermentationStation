@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fermentation/models/project.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,8 +13,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyApp> {
+  final dbHelper = Databasehelper.instance;
   final List<String> entries = <String>['A', 'B', 'C'];
 
+  //controllers used in insert operation UI
+  TextEditingController nameController = TextEditingController();
+  TextEditingController startController = TextEditingController();
   int _selectedIndex = 1;
   void _onItemTapped(int index) {
     setState(() {
@@ -23,13 +28,15 @@ class _MyHomePageState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    _insert("kombucha", "end");
+    _queryAll();
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-            title: const Text('Projects'),
-            backgroundColor: Colors.redAccent,
-            centerTitle: true,
-          ),
+          title: const Text('Projects'),
+          backgroundColor: Colors.redAccent,
+          centerTitle: true,
+        ),
         body: Center(
           child: Container(
             decoration: const BoxDecoration(
@@ -70,5 +77,22 @@ class _MyHomePageState extends State<MyApp> {
         ),
       ),
     );
+  }
+
+  void _insert(name, end) async {
+    // row to insert
+    Map<String, dynamic> row = {
+      Databasehelper.columnName: name,
+      Databasehelper.columnEnd: end
+    };
+    Project car = Project.fromMap(row);
+    await dbHelper.insert(car);
+  }
+
+  void _queryAll() async {
+    final allRows = await dbHelper.queryAllRows();
+    entries.clear();
+    allRows.forEach((row) => entries.add(Project.fromMap(row).toString()));
+    setState(() {});
   }
 }

@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:fermentation/main.dart';
+import 'package:fermentation/util/database_helper.dart';
+import 'package:fermentation/models/project_to_use.dart';
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
@@ -16,15 +18,18 @@ void main() {
     await tester.pumpWidget(const MyApp());
 
     // Verify that our counter starts at 0.
-    expect(find.text('0'), findsOneWidget);
-    expect(find.text('1'), findsNothing);
 
     // Tap the '+' icon and trigger a frame.
     await tester.tap(find.byIcon(Icons.add));
     await tester.pump();
 
     // Verify that our counter has incremented.
-    expect(find.text('0'), findsNothing);
-    expect(find.text('1'), findsOneWidget);
+  });
+  test('testing database', () async {
+    ProjectToUse kombucha =
+        ProjectToUse(1, "Kombucha", "_projectStart", "_projectEnd");
+    DatabaseHelper db = DatabaseHelper();
+    db.insertProject(kombucha);
+    db.getProject(1);
   });
 }

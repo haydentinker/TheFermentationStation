@@ -9,9 +9,9 @@ Over the past year I have gotten into making things like kombucha, pickled veget
 # Tech/Framework used
 
 Built with:
-
+- Dart
 - Flutter
-- FlutterFlow
+- Sqflite
 
 # Collaborators
 

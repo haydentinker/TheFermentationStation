@@ -32,8 +32,8 @@ class Project {
     _projectStart = map[projectStart].toString();
     _projectEnd = map[projectEnd].toString();
   }
-  void setParams(int id, String name, String start, String end) {
-    _projectId = id;
+  void setParams(String name, String start, String end) {
+    _projectId = 1;
     _projectName = name;
     _projectStart = start;
     _projectEnd = end;

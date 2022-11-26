@@ -13,9 +13,13 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyApp> {
+  final controller1 = TextEditingController();
+  final controller2 = TextEditingController();
+  final controller3 = TextEditingController();
+  final controller4 = TextEditingController();
+  final _formKey = GlobalKey<FormState>();
   final dbHelper = Databasehelper.instance;
   List entries = [];
-
   //controllers used in insert operation UI
   TextEditingController nameController = TextEditingController();
   TextEditingController startController = TextEditingController();
@@ -27,8 +31,16 @@ class _MyHomePageState extends State<MyApp> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    controller1.dispose();
+    controller2.dispose();
+    controller3.dispose();
+    controller4.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    _insert("kombucha", "end");
     _queryAll();
     return MaterialApp(
       home: Scaffold(
@@ -36,6 +48,48 @@ class _MyHomePageState extends State<MyApp> {
           title: const Text('Projects'),
           backgroundColor: Colors.redAccent,
           centerTitle: true,
+          actions: [
+            PopupMenuButton(
+              constraints: const BoxConstraints.expand(width: 600, height: 500),
+              itemBuilder: (context) => [
+                PopupMenuItem(
+                    child: Form(
+                        key: _formKey,
+                        child: Column(children: <Widget>[
+                          TextFormField(
+                            controller: controller1,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Enter your project name',
+                            ),
+                          ),
+                          TextFormField(
+                            controller: controller2,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Enter your project start date',
+                            ),
+                          ),
+                          TextFormField(
+                            controller: controller3,
+                            decoration: const InputDecoration(
+                              border: UnderlineInputBorder(),
+                              labelText: 'Enter your project end date',
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              _insert(controller1.text, controller2.text,
+                                  controller3.text);
+                              _queryAll();
+                              setState(() {});
+                            },
+                            child: const Text('Submit'),
+                          ),
+                        ])))
+              ],
+            ),
+          ],
         ),
         body: Center(
           child: Container(
@@ -75,11 +129,15 @@ class _MyHomePageState extends State<MyApp> {
     );
   }
 
-  void _insert(name, end) async {
+  void _insert(name, start, end) async {
     // row to insert
     Project project = Project();
-    project.setParams(1, "Kombucha", "start", "end");
+    project.setParams(name, start, end);
     await dbHelper.insert(project);
+  }
+
+  PopupMenuItem _buildPopupMenuItem(String title) {
+    return PopupMenuItem(child: Text(title));
   }
 
   void _queryAll() async {

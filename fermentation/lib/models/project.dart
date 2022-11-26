@@ -17,7 +17,6 @@ class Project {
 
   Map<String, Object?> toMap() {
     var map = <String, Object?>{
-      projectId: _projectId,
       projectName: _projectName,
       projectStart: _projectStart,
       projectEnd: _projectEnd
@@ -69,7 +68,7 @@ class Databasehelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute(
-        "CREATE TABLE $table($columnId INTEGER PRIMARY KEY,$columnName TEXT NOT NULL,$columnStart TEXT NOT NULL,$columnEnd TEXT NOT NULL)");
+        "CREATE TABLE $table($columnId INTEGER PRIMARY KEY AUTOINCREMENT,$columnName TEXT NOT NULL,$columnStart TEXT NOT NULL,$columnEnd TEXT NOT NULL)");
   }
 
   Future<int> insert(Project project) async {
@@ -80,5 +79,16 @@ class Databasehelper {
   Future<List<Map<String, dynamic>>> queryAllRows() async {
     Database? db = await instance.getDatabase;
     return await db!.query(table);
+  }
+
+  Future<int> delete(int id) async {
+    Database? db = await instance.getDatabase;
+    return await db!.delete(table, where: '$columnId = ?', whereArgs: [id]);
+  }
+
+  Future<int> update(Project project) async {
+    Database? db = await instance.getDatabase;
+    return await db!.update(table, project.toMap(),
+        where: '$columnId = ?', whereArgs: [project._projectId]);
   }
 }

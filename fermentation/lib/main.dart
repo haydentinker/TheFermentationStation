@@ -14,7 +14,7 @@ class MyApp extends StatefulWidget {
 
 class _MyHomePageState extends State<MyApp> {
   final dbHelper = Databasehelper.instance;
-  final List<String> entries = <String>['A', 'B', 'C'];
+  List entries = [];
 
   //controllers used in insert operation UI
   TextEditingController nameController = TextEditingController();
@@ -59,10 +59,6 @@ class _MyHomePageState extends State<MyApp> {
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-              icon: Icon(Icons.account_box),
-              label: 'Profile',
-            ),
-            BottomNavigationBarItem(
               icon: Icon(Icons.home),
               label: 'Home',
             ),
@@ -89,7 +85,15 @@ class _MyHomePageState extends State<MyApp> {
   void _queryAll() async {
     final allRows = await dbHelper.queryAllRows();
     entries.clear();
-    allRows.forEach((row) => entries.add(Project.fromMap(row).toString()));
-    setState(() {});
+    allRows.forEach((row) => entries.add(row));
+    print(entries[0]["name"]);
+  }
+
+  void _deleteProject(int id) async {
+    dbHelper.delete(id);
+  }
+
+  void _updateProject(Project project) {
+    dbHelper.update(project);
   }
 }

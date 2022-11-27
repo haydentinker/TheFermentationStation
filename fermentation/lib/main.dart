@@ -103,13 +103,13 @@ class _MyHomePageState extends State<MyApp> {
                                   const SnackBar(
                                       backgroundColor: Colors.pink,
                                       content: Text('Adding Project')));
-                              controller1.clear();
-                              controller2.clear();
-                              controller3.clear();
                               _insert(controller1.text, controller2.text,
                                   controller3.text);
                               _queryAll();
                               setState(() {});
+                              controller1.clear();
+                              controller2.clear();
+                              controller3.clear();
                             },
                             child: const Text('Submit'),
                           ),

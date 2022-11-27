@@ -10,6 +10,7 @@ class CalendarPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return SfCalendar(
       view: CalendarView.month,
+
       dataSource: MeetingDataSource(_getDataSource()),
       // by default the month appointment display mode set as Indicator, we can
       // change the display mode as appointment using the appointment display
@@ -22,11 +23,11 @@ class CalendarPage extends StatelessWidget {
   List<Meeting> _getDataSource() {
     _queryAll();
     final List<Meeting> meetings = <Meeting>[];
-    final DateTime today = DateTime.parse(entries[0]["end"]);
-    final DateTime startTime = DateTime(today.year, today.month, today.day, 9);
-    final DateTime endTime = startTime.add(const Duration(hours: 2));
-    meetings.add(Meeting(
-        entries[0]["name"], startTime, endTime, Colors.redAccent, false));
+    entries.forEach((entry) {
+      final DateTime today = DateTime.parse(entry["end"]);
+      final DateTime startTime = DateTime(today.year, today.month, today.day);
+      meetings.add(Meeting(entry["name"], startTime, Colors.redAccent));
+    });
     return meetings;
   }
 
@@ -55,11 +56,6 @@ class MeetingDataSource extends CalendarDataSource {
   }
 
   @override
-  DateTime getEndTime(int index) {
-    return _getMeetingData(index).to;
-  }
-
-  @override
   String getSubject(int index) {
     return _getMeetingData(index).eventName;
   }
@@ -67,11 +63,6 @@ class MeetingDataSource extends CalendarDataSource {
   @override
   Color getColor(int index) {
     return _getMeetingData(index).background;
-  }
-
-  @override
-  bool isAllDay(int index) {
-    return _getMeetingData(index).isAllDay;
   }
 
   Meeting _getMeetingData(int index) {
@@ -89,7 +80,7 @@ class MeetingDataSource extends CalendarDataSource {
 /// information about the event data which will be rendered in calendar.
 class Meeting {
   /// Creates a meeting class with required details.
-  Meeting(this.eventName, this.from, this.to, this.background, this.isAllDay);
+  Meeting(this.eventName, this.from, this.background);
 
   /// Event name which is equivalent to subject property of [Appointment].
   String eventName;
@@ -97,12 +88,6 @@ class Meeting {
   /// From which is equivalent to start time property of [Appointment].
   DateTime from;
 
-  /// To which is equivalent to end time property of [Appointment].
-  DateTime to;
-
   /// Background which is equivalent to color property of [Appointment].
   Color background;
-
-  /// IsAllDay which is equivalent to isAllDay property of [Appointment].
-  bool isAllDay;
 }

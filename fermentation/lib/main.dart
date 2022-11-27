@@ -66,6 +66,7 @@ class _MyHomePageState extends State<MyApp> {
       home: Scaffold(
         appBar: AppBar(
           title: Text(_pageTitles[_currentIndex]),
+          titleTextStyle: const TextStyle(fontSize: 35),
           backgroundColor: Colors.redAccent,
           centerTitle: true,
           actions: [

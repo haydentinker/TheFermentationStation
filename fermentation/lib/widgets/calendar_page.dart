@@ -8,16 +8,47 @@ class CalendarPage extends StatelessWidget {
   late List entries = [];
   @override
   Widget build(BuildContext context) {
-    return SfCalendar(
-      view: CalendarView.month,
+    return Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+          begin: Alignment.bottomLeft,
+          end: Alignment.topRight,
+          colors: [
+            Colors.orangeAccent,
+            Colors.deepOrange,
+          ],
+        )),
+        child: SfCalendar(
+          selectionDecoration:
+              BoxDecoration(border: Border.all(color: Colors.red, width: 2)),
+          viewHeaderStyle: const ViewHeaderStyle(
+              dayTextStyle: TextStyle(color: Colors.white, fontSize: 15)),
+          headerStyle: const CalendarHeaderStyle(
+              textAlign: TextAlign.center,
+              textStyle: TextStyle(color: Colors.white, fontSize: 15)),
+          todayHighlightColor: Colors.pink,
+          cellBorderColor: Colors.white,
+          view: CalendarView.month,
+          dataSource: MeetingDataSource(_getDataSource()),
+          // by default the month appointment display mode set as Indicator, we can
+          // change the display mode as appointment using the appointment display
+          // mode property
 
-      dataSource: MeetingDataSource(_getDataSource()),
-      // by default the month appointment display mode set as Indicator, we can
-      // change the display mode as appointment using the appointment display
-      // mode property
-      monthViewSettings: const MonthViewSettings(
-          appointmentDisplayMode: MonthAppointmentDisplayMode.appointment),
-    );
+          monthViewSettings: const MonthViewSettings(
+            monthCellStyle: MonthCellStyle(
+                textStyle: TextStyle(color: Colors.white),
+                trailingDatesTextStyle: TextStyle(color: Colors.black12),
+                leadingDatesTextStyle: TextStyle(color: Colors.black12)),
+            appointmentDisplayCount: 2,
+            showAgenda: true,
+            agendaViewHeight: 100,
+            agendaStyle: AgendaStyle(
+                appointmentTextStyle: TextStyle(color: Colors.white),
+                dateTextStyle: TextStyle(color: Colors.white),
+                dayTextStyle: TextStyle(color: Colors.white),
+                placeholderTextStyle: TextStyle(color: Colors.black12)),
+          ),
+        ));
   }
 
   List<Meeting> _getDataSource() {
@@ -25,8 +56,9 @@ class CalendarPage extends StatelessWidget {
     final List<Meeting> meetings = <Meeting>[];
     entries.forEach((entry) {
       final DateTime today = DateTime.parse(entry["end"]);
-      final DateTime startTime = DateTime(today.year, today.month, today.day);
-      meetings.add(Meeting(entry["name"], startTime, Colors.redAccent));
+      final DateTime startTime =
+          DateTime(today.year, today.month, today.day, 9);
+      meetings.add(Meeting(entry["name"], startTime, Colors.pink));
     });
     return meetings;
   }

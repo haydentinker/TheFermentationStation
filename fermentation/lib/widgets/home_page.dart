@@ -16,7 +16,7 @@ class HomePage extends StatelessWidget {
           end: Alignment.topRight,
           colors: [
             Colors.deepOrange,
-            Colors.pink,
+            Colors.orangeAccent,
           ],
         )),
         child: ListView.builder(

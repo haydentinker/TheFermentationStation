@@ -42,6 +42,7 @@ dependencies:
   path_provider_ios: ^2.0.11
   path_provider_android: ^2.0.21
   sqlite3: ^1.9.1
+  syncfusion_flutter_calendar: ^20.3.58
 
 dev_dependencies:
   flutter_test:

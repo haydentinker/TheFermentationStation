@@ -15,7 +15,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   test('testing database', () async {
     Project kombucha = Project();
-    kombucha.setParams(5, "kombucha", "start", "end");
+    kombucha.setParams("Kombucha", "start", "end");
     Databasehelper mydb = Databasehelper.instance;
     mydb.getDatabase;
     mydb.insert(kombucha);

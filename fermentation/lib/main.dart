@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fermentation/models/project.dart';
+import 'package:fermentation/calendar_page.dart';
+import 'package:fermentation/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,10 +25,28 @@ class _MyHomePageState extends State<MyApp> {
   //controllers used in insert operation UI
   TextEditingController nameController = TextEditingController();
   TextEditingController startController = TextEditingController();
-  int _selectedIndex = 1;
+  late List<Widget> _pages;
+  late List<String> _pageTitles;
+  late Widget _page1;
+  late Widget _page2;
+  late int _currentIndex;
+  late Widget _currentPage;
+
+  @override
+  void initState() {
+    super.initState();
+    _page1 = HomePage();
+    _page2 = CalendarPage();
+    _pages = [_page1, _page2];
+    _pageTitles = ["Home", "Calendar"];
+    _currentIndex = 0;
+    _currentPage = _page1;
+  }
+
   void _onItemTapped(int index) {
     setState(() {
-      _selectedIndex = index;
+      _currentIndex = index;
+      _currentPage = _pages[index];
     });
   }
 
@@ -45,12 +65,12 @@ class _MyHomePageState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Projects'),
+          title: Text(_pageTitles[_currentIndex]),
           backgroundColor: Colors.redAccent,
           centerTitle: true,
           actions: [
             PopupMenuButton(
-              constraints: const BoxConstraints.expand(width: 600, height: 500),
+              constraints: const BoxConstraints.expand(width: 600, height: 400),
               itemBuilder: (context) => [
                 PopupMenuItem(
                     child: Form(
@@ -79,6 +99,13 @@ class _MyHomePageState extends State<MyApp> {
                           ),
                           ElevatedButton(
                             onPressed: () {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                      backgroundColor: Colors.pink,
+                                      content: Text('Adding Project')));
+                              controller1.clear();
+                              controller2.clear();
+                              controller3.clear();
                               _insert(controller1.text, controller2.text,
                                   controller3.text);
                               _queryAll();
@@ -91,25 +118,7 @@ class _MyHomePageState extends State<MyApp> {
             ),
           ],
         ),
-        body: Center(
-          child: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-              begin: Alignment.bottomLeft,
-              end: Alignment.topRight,
-              colors: [
-                Colors.deepOrange,
-                Colors.pink,
-              ],
-            )),
-            child: ListView.builder(
-              itemCount: entries.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Center(child: Text('Entry ${entries[index]}'));
-              },
-            ),
-          ),
-        ),
+        body: _currentPage,
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
@@ -118,10 +127,10 @@ class _MyHomePageState extends State<MyApp> {
             ),
             BottomNavigationBarItem(
               icon: Icon(Icons.calendar_month),
-              label: 'Calender',
+              label: 'Calendar',
             ),
           ],
-          currentIndex: _selectedIndex,
+          currentIndex: _currentIndex,
           selectedItemColor: const Color.fromARGB(255, 230, 71, 23),
           onTap: _onItemTapped,
         ),
@@ -136,15 +145,10 @@ class _MyHomePageState extends State<MyApp> {
     await dbHelper.insert(project);
   }
 
-  PopupMenuItem _buildPopupMenuItem(String title) {
-    return PopupMenuItem(child: Text(title));
-  }
-
   void _queryAll() async {
     final allRows = await dbHelper.queryAllRows();
     entries.clear();
-    allRows.forEach((row) => entries.add(row));
-    print(entries[0]["name"]);
+    allRows.forEach((row) => entries.add(Project.fromMap(row)));
   }
 
   void _deleteProject(int id) async {

@@ -41,7 +41,7 @@ class Project {
 }
 
 class Databasehelper {
-  static const _databaseName = "myDatabase.db";
+  static const _databaseName = "fermentationProjects.db";
   static const _databaseVersion = 1;
 
   static const table = 'project_table';
@@ -62,7 +62,7 @@ class Databasehelper {
   _initDatabase() async {
     String path = await getDatabasesPath();
 
-    return await openDatabase(join(path, 'example.db'),
+    return await openDatabase(join(path, _databaseName),
         version: _databaseVersion, onCreate: _onCreate);
   }
 

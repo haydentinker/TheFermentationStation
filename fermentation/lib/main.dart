@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fermentation/models/project.dart';
-import 'package:fermentation/calendar_page.dart';
-import 'package:fermentation/home_page.dart';
+import 'package:fermentation/widgets/calendar_page.dart';
+import 'package:fermentation/widgets/home_page.dart';
 
 void main() {
   runApp(const MyApp());

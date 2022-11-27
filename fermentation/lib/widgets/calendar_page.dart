@@ -19,6 +19,7 @@ class CalendarPage extends StatelessWidget {
           ],
         )),
         child: SfCalendar(
+          showNavigationArrow: true,
           selectionDecoration:
               BoxDecoration(border: Border.all(color: Colors.red, width: 2)),
           viewHeaderStyle: const ViewHeaderStyle(

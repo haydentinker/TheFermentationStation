@@ -22,13 +22,15 @@ class HomePage extends StatelessWidget {
         child: ListView.builder(
           itemCount: entries.length,
           itemBuilder: (BuildContext context, int index) {
-            if (entries.isEmpty) {
-              return const Center(
-                child: Text('No Projects!'),
-              );
-            } else {
-              return Center(child: Text('Entry ${entries[index]}'));
-            }
+            final item = entries[index];
+            return Card(
+                child: ListTile(
+              title: Text(item["name"]),
+              trailing: const Icon(Icons.keyboard_arrow_right),
+              onTap: () {
+                print("hello");
+              },
+            ));
           },
         ),
       ),

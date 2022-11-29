@@ -25,18 +25,17 @@ class _MyHomePageState extends State<MyApp> {
   //controllers used in insert operation UI
   TextEditingController nameController = TextEditingController();
   TextEditingController startController = TextEditingController();
-  late List<Widget> _pages;
+  late List _pages;
   late List<String> _pageTitles;
-  late Widget _page1;
-  late Widget _page2;
+
   late int _currentIndex;
   late Widget _currentPage;
 
   @override
   void initState() {
     super.initState();
-    _page1 = HomePage();
-    _page2 = CalendarPage();
+    const HomePage _page1 = HomePage();
+    const CalendarPage _page2 = CalendarPage();
     _pages = [_page1, _page2];
     _pageTitles = ["Home", "Calendar"];
     _currentIndex = 0;
@@ -71,48 +70,100 @@ class _MyHomePageState extends State<MyApp> {
           centerTitle: true,
           actions: [
             PopupMenuButton(
-              constraints: const BoxConstraints.expand(width: 600, height: 400),
+              icon: const Icon(Icons.edit_note_rounded),
               itemBuilder: (context) => [
                 PopupMenuItem(
                     child: Form(
                         key: _formKey,
                         child: Column(children: <Widget>[
-                          TextFormField(
-                            controller: controller1,
-                            decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Enter your project name',
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.black,
                             ),
-                          ),
-                          TextFormField(
-                            controller: controller2,
-                            decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Enter your project start date',
-                            ),
-                          ),
-                          TextFormField(
-                            controller: controller3,
-                            decoration: const InputDecoration(
-                              border: UnderlineInputBorder(),
-                              labelText: 'Enter your project end date',
-                            ),
-                          ),
-                          ElevatedButton(
+                            child: const Text("Add Project"),
                             onPressed: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      backgroundColor: Colors.pink,
-                                      content: Text('Adding Project')));
-                              _insert(controller1.text, controller2.text,
-                                  controller3.text);
-                              _queryAll();
-                              setState(() {});
-                              controller1.clear();
-                              controller2.clear();
-                              controller3.clear();
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                        title: const Text('New Project'),
+                                        content: Column(children: <Widget>[
+                                          TextFormField(
+                                            controller: controller1,
+                                            decoration: const InputDecoration(
+                                              border: UnderlineInputBorder(),
+                                              labelText:
+                                                  'Enter your project name',
+                                            ),
+                                          ),
+                                          TextFormField(
+                                            controller: controller2,
+                                            decoration: const InputDecoration(
+                                              border: UnderlineInputBorder(),
+                                              labelText:
+                                                  'Enter your project start date',
+                                            ),
+                                          ),
+                                          TextFormField(
+                                            controller: controller3,
+                                            decoration: const InputDecoration(
+                                              border: UnderlineInputBorder(),
+                                              labelText:
+                                                  'Enter your project end date',
+                                            ),
+                                          )
+                                        ]),
+                                        actions: [
+                                          TextButton(
+                                              child: const Text('Cancel'),
+                                              onPressed: () =>
+                                                  Navigator.pop(context)),
+                                          TextButton(
+                                              child: const Text('Add'),
+                                              onPressed: () {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(const SnackBar(
+                                                        backgroundColor:
+                                                            Colors.pink,
+                                                        content: Text(
+                                                            'Added project')));
+                                                _insert(
+                                                    controller1.text,
+                                                    controller2.text,
+                                                    controller3.text);
+                                                _queryAll();
+                                                setState(() {});
+                                                controller1.clear();
+                                                controller2.clear();
+                                                controller3.clear();
+                                                Navigator.pop(context);
+                                              }),
+                                        ],
+                                      ));
                             },
-                            child: const Text('Submit'),
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.black,
+                            ),
+                            child: const Text("Edit Project"),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => const AlertDialog(
+                                      title: Text('My Title')));
+                            },
+                          ),
+                          TextButton(
+                            style: TextButton.styleFrom(
+                              foregroundColor: Colors.black,
+                            ),
+                            child: const Text("Delete Project"),
+                            onPressed: () {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) => const AlertDialog(
+                                      title: Text('My Title')));
+                            },
                           ),
                         ])))
               ],

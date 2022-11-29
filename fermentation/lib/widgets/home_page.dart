@@ -1,10 +1,25 @@
+import 'package:fermentation/main.dart';
 import 'package:flutter/material.dart';
 import 'package:fermentation/models/project.dart';
 
-class HomePage extends StatelessWidget {
-  HomePage({Key? key}) : super(key: key);
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  State<HomePage> createState() => HomePageState();
+}
+
+class HomePageState extends State<HomePage> {
+  bool _active = false;
+  void _handleTap() {
+    setState(() {
+      _active = !_active;
+    });
+  }
+
   final Databasehelper dbHelper = Databasehelper.instance;
   List entries = [];
+  bool customTileExpanded = false;
   @override
   Widget build(BuildContext context) {
     _queryAll();
@@ -23,12 +38,19 @@ class HomePage extends StatelessWidget {
           itemCount: entries.length,
           itemBuilder: (BuildContext context, int index) {
             final item = entries[index];
+            final start = item["start"];
+            final end = item["end"];
             return Card(
-                child: ListTile(
+                child: ExpansionTile(
               title: Text(item["name"]),
-              trailing: const Icon(Icons.keyboard_arrow_right),
-              onTap: () {
-                print("hello");
+              trailing: const Icon(Icons.arrow_drop_down),
+              children: <Widget>[
+                ListTile(
+                  title: Text('Start date: $start End date: $end'),
+                )
+              ],
+              onExpansionChanged: (bool expanded) {
+                setState(() => customTileExpanded = expanded);
               },
             ));
           },
@@ -41,5 +63,6 @@ class HomePage extends StatelessWidget {
     final allRows = await dbHelper.queryAllRows();
     entries.clear();
     allRows.forEach((row) => entries.add(row));
+    setState(() {});
   }
 }

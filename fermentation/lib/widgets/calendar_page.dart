@@ -2,12 +2,25 @@ import 'package:flutter/material.dart';
 import 'package:fermentation/models/project.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
 
-class CalendarPage extends StatelessWidget {
-  CalendarPage({Key? key}) : super(key: key);
+class CalendarPage extends StatefulWidget {
+  const CalendarPage({super.key});
+  @override
+  State<CalendarPage> createState() => CalendarPageState();
+}
+
+class CalendarPageState extends State<CalendarPage> {
   final Databasehelper dbHelper = Databasehelper.instance;
   late List entries = [];
+  bool _active = false;
+  void _handleTap() {
+    setState(() {
+      _active = !_active;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    _queryAll();
     return Container(
         decoration: const BoxDecoration(
             gradient: LinearGradient(
@@ -70,6 +83,7 @@ class CalendarPage extends StatelessWidget {
     entries.clear();
     allRows.forEach((row) => projectList.add(Project.fromMap(row)));
     projectList.forEach((row) => entries.add(row.toMap()));
+    setState(() {});
   }
 }
 

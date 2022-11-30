@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
+import 'dart:io';
 
 //Class for Projects
 const String projectTable = "project";
@@ -51,18 +53,15 @@ class Databasehelper {
   static const columnEnd = 'end';
   Databasehelper._privateConstructor();
   static final Databasehelper instance = Databasehelper._privateConstructor();
-  static Database? _database;
 
-  Future<Database?> get getDatabase async {
-    if (_database != null) return _database;
-    _database = await _initDatabase();
-    return _database;
-  }
+  static Database? _database;
+  Future<Database> get getdatabase async => _database ??= await _initDatabase();
 
   _initDatabase() async {
-    String path = await getDatabasesPath();
+    Directory documentsDirectory = await getApplicationDocumentsDirectory();
+    String path = join(documentsDirectory.path, _databaseName);
 
-    return await openDatabase(join(path, _databaseName),
+    return await openDatabase(path,
         version: _databaseVersion, onCreate: _onCreate);
   }
 
@@ -72,23 +71,23 @@ class Databasehelper {
   }
 
   Future<int> insert(Project project) async {
-    Database? db = await instance.getDatabase;
-    return await db!.insert(table, project.toMap());
+    Database? db = await instance.getdatabase;
+    return await db.insert(table, project.toMap());
   }
 
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    Database? db = await instance.getDatabase;
-    return await db!.query(table);
+    Database? db = await instance.getdatabase;
+    return await db.query(table);
   }
 
   Future<int> delete(int id) async {
-    Database? db = await instance.getDatabase;
-    return await db!.delete(table, where: '$columnId = ?', whereArgs: [id]);
+    Database? db = await instance.getdatabase;
+    return await db.delete(table, where: '$columnId = ?', whereArgs: [id]);
   }
 
   Future<int> update(Project project) async {
-    Database? db = await instance.getDatabase;
-    return await db!.update(table, project.toMap(),
+    Database? db = await instance.getdatabase;
+    return await db.update(table, project.toMap(),
         where: '$columnId = ?', whereArgs: [project._projectId]);
   }
 }

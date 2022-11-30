@@ -147,10 +147,22 @@ class _MyHomePageState extends State<MyApp> {
                             ),
                             child: const Text("Edit Project"),
                             onPressed: () {
+                              _queryAll();
                               showDialog(
                                   context: context,
-                                  builder: (context) => const AlertDialog(
-                                      title: Text('My Title')));
+                                  builder: (context) => ListView.builder(
+                                        itemCount: entries.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          var item = entries[index];
+                                          return ElevatedButton(
+                                              onPressed: () {
+                                                print("hi");
+                                              },
+                                              child:
+                                                  Text(item['_id'].toString()));
+                                        },
+                                      ));
                             },
                           ),
                           TextButton(
@@ -200,7 +212,8 @@ class _MyHomePageState extends State<MyApp> {
   void _queryAll() async {
     final allRows = await dbHelper.queryAllRows();
     entries.clear();
-    allRows.forEach((row) => entries.add(Project.fromMap(row)));
+    allRows.forEach((row) => entries.add(row));
+    setState(() {});
   }
 
   void _deleteProject(int id) async {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:fermentation/models/project.dart';
 import 'package:fermentation/widgets/calendar_page.dart';
 import 'package:fermentation/widgets/home_page.dart';
+import 'package:fermentation/edit_project.dart';
 
 void main() {
   runApp(const MyApp());
@@ -23,8 +24,6 @@ class _MyHomePageState extends State<MyApp> {
   final dbHelper = Databasehelper.instance;
   List entries = [];
   //controllers used in insert operation UI
-  TextEditingController nameController = TextEditingController();
-  TextEditingController startController = TextEditingController();
   late List _pages;
   late List<String> _pageTitles;
 
@@ -136,35 +135,22 @@ class _MyHomePageState extends State<MyApp> {
                                                 controller2.clear();
                                                 controller3.clear();
                                                 Navigator.pop(context);
+                                                Navigator.pop(context);
                                               }),
                                         ],
                                       ));
                             },
                           ),
                           TextButton(
-                            style: TextButton.styleFrom(
-                              foregroundColor: Colors.black,
-                            ),
-                            child: const Text("Edit Project"),
-                            onPressed: () {
-                              _queryAll();
-                              showDialog(
-                                  context: context,
-                                  builder: (context) => ListView.builder(
-                                        itemCount: entries.length,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          var item = entries[index];
-                                          return ElevatedButton(
-                                              onPressed: () {
-                                                print("hi");
-                                              },
-                                              child:
-                                                  Text(item['_id'].toString()));
-                                        },
-                                      ));
-                            },
-                          ),
+                              style: TextButton.styleFrom(
+                                foregroundColor: Colors.black,
+                              ),
+                              child: const Text("Edit Project"),
+                              onPressed: () {
+                                _queryAll();
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const EditPage()));
+                              }),
                           TextButton(
                             style: TextButton.styleFrom(
                               foregroundColor: Colors.black,
